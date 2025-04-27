@@ -26,6 +26,14 @@ class PlantDaddy():
         self.window_width = self.scale * self.width
         self.window = pygame.display.set_mode((self.window_width, self.window_height + self.scale))
 
+        # Initialize the best time to a very high number
+        self.best_mins = 9999
+        self.best_secs = 59
+        self.best_millisecs = 9999
+
+        with open("best_time.txt", "w") as results_file:
+            results_file.write(f"{self.best_mins}:{self.best_secs:02}.{self.best_millisecs}")
+
         self.new_game()
         self.main_loop()
 
@@ -376,6 +384,25 @@ class PlantDaddy():
             finished_timer = self.game_font.render(f"{self.mins}:{self.secs:02}.{self.millisecs}", True, (0, 0, 0))
             pygame.draw.rect(self.window, (240, 240, 240), (self.window_width/2-finished_timer.get_width()/2, self.height*self.scale, 100, 50))
             self.window.blit(finished_timer, (self.window_width/2-finished_timer.get_width()/2, self.height*self.scale+15))
+
+            # If it's the best time ever, write finished time to file
+            if self.mins < self.best_mins:
+                self.best_mins = self.mins
+                self.best_secs = self.secs
+                self.best_millisecs = self.millisecs
+            elif self.mins == self.best_mins:
+                if self.secs < self.best_secs:
+                    self.best_mins = self.mins
+                    self.best_secs = self.secs
+                    self.best_millisecs = self.millisecs
+                elif self.secs == self.best_secs:
+                    if self.millisecs < self.best_millisecs:
+                        self.best_mins = self.mins
+                        self.best_secs = self.secs
+                        self.best_millisecs = self.millisecs
+
+            with open("best_time.txt", "w") as results_file:
+                results_file.write(f"{self.best_mins}:{self.best_secs:02}.{self.best_millisecs}")
 
         if self.game_over:
             # Display lose text with a background so it's easier to read
