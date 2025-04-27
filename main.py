@@ -377,7 +377,7 @@ class PlantDaddy():
             pygame.draw.rect(self.window, (240, 240, 240), (self.window_width/2-finished_timer.get_width()/2, self.height*self.scale, 100, 50))
             self.window.blit(finished_timer, (self.window_width/2-finished_timer.get_width()/2, self.height*self.scale+15))
 
-        if self.game_over == True:
+        if self.game_over:
             # Display lose text with a background so it's easier to read
             lose_text = self.shout_font.render("GAME OVER", True, (220, 20, 60))
             pygame.draw.rect(self.window, (50, 50, 50), (self.window_width/2-lose_text.get_width()/2, self.height*self.scale-self.scale+2, 200, 46))
